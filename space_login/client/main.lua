@@ -1,13 +1,19 @@
-local isRegistered = false
+local QBCore = exports['qb-core']:GetCoreObject()
+local isLoading = false
 
 CreateThread(function()
-    Wait(1000) 
-    TriggerServerEvent('character:checkRegistration')
-    TriggerServerEvent('character:loadData')
+    if not isLoading then
+        isLoading = true
+        Wait(2000) 
+        TriggerServerEvent('character:loadUserData', {})
+    end
 end)
 
-RegisterNetEvent('character:showRegistrationMenu', function()
-    print("Mostrando NUI de registro")
+RegisterNetEvent('character:client:onPlayerLoaded', function(data)
+    isLoading = false 
+end)
+
+RegisterNetEvent('character:client:showRegistrationMenu', function()
     SendNUIMessage({
         action = "show"
     })
@@ -15,34 +21,15 @@ RegisterNetEvent('character:showRegistrationMenu', function()
 end)
 
 RegisterNUICallback('submit', function(data, cb)
-    SetNuiFocus(false, false)
-    SendNUIMessage({
-        action = "hide"
+    TriggerServerEvent('character:createCharacter', {
+        firstname = data.firstname,
+        lastname = data.lastname, 
+        gender = data.gender
     })
-
-    TriggerServerEvent('character:save', data)
     cb('ok')
-end)
-
-RegisterNetEvent('character:registrationComplete', function(name, gender)
-    isRegistered = true
-    print("Registro completado con éxito. Cargando jugador:", name, gender)
-    
-end)
-
-RegisterNetEvent('character:loadPlayer', function(name, gender)
-    print("Cargando personaje existente:", name, gender)
+    SetNuiFocus(false, false)
+    TriggerEvent('illenium-appearance:client:openClothingShopMenu')
 end)
 
 
-RegisterNetEvent('character:receiveData', function(data)
-    print("Datos cargados:", data.name, data.gender)
-end)
 
-RegisterNetEvent('character:showRegistrationMenu', function()
-    print("Mostrando menú de registro")
-    SendNUIMessage({
-        action = "show"
-    })
-    SetNuiFocus(true, true)
-end)

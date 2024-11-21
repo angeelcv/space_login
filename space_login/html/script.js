@@ -1,7 +1,7 @@
 document.getElementById("registration-form").addEventListener("submit", function (e) {
     e.preventDefault();
     const data = {
-        name: document.getElementById("name").value,
+        firstname: document.getElementById("name").value, 
         gender: document.getElementById("gender").value,
     };
 
