@@ -28,7 +28,7 @@ RegisterNUICallback('submit', function(data, cb)
     })
     cb('ok')
     SetNuiFocus(false, false)
-    TriggerEvent('illenium-appearance:client:openClothingShopMenu')
+    TriggerEvent('qb-clothing:client:openMenu')
 end)
 
 
